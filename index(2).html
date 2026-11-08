@@ -31,7 +31,19 @@ body{
 button{font-family:inherit}
 
 /* ---------- Inloggning ---------- */
-#login{display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+#login{display:flex;justify-content:center;padding:16px;z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#login .panel{margin:auto 0}
+@media (max-height:700px){
+  #login .ticket svg{height:44px}
+  #login .panel{padding:18px 18px 16px}
+  #login .sub{margin:6px 0 14px;font-size:15px}
+  #login .names{gap:8px}
+  #login .names button{padding:10px 8px;font-size:18px}
+  #login h1{font-size:clamp(26px,6.5vw,34px)}
+  #login h1 span{font-size:.55em}
+  #login .brand{letter-spacing:1.5px}
+}
+@media (max-height:600px){ #login .ticket{display:none} #login .foot{margin-top:8px} }
 .panel{
   width:min(440px,100%); background:var(--card); border:1px solid var(--line);
   border-radius:26px; padding:26px 24px 22px; text-align:center;
@@ -123,7 +135,10 @@ input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,209,102,.18)}
 #cracks{position:absolute;left:6%;top:6%;width:52%;height:62%;opacity:0}
 #outside > *{position:absolute}
 #padView{left:0;right:0;bottom:0;height:42%}
-#padView svg{width:100%;height:100%}
+#padView{display:flex;align-items:flex-end}
+#padView .pv-sky{position:absolute;inset:0;background:linear-gradient(180deg,rgba(59,95,176,0),rgba(126,160,230,.55))}
+#padView .pv-trees,#padView .pv-tower{position:relative;height:100%;width:auto;flex:none;display:block}
+#padView .pv-snow{position:absolute;left:0;right:0;bottom:0;height:9%;background:#dfe8ff;z-index:1}
 .planet{left:50%;top:40%;width:var(--ps,200px);aspect-ratio:1;opacity:0;transform:translate(-50%,-50%) scale(.05)}
 .cat{left:0;top:0;width:var(--cw,140px);aspect-ratio:220/150;transform:translate(-200%,0)}
 #tomteLand{inset:0}
@@ -442,15 +457,20 @@ input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,209,102,.18)}
   <div id="shakeBox">
     <div id="outside">
       <div id="padView">
-        <svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice">
-          <defs><linearGradient id="gHz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b5fb0" stop-opacity="0"/><stop offset="1" stop-color="#7ea0e6" stop-opacity=".55"/></linearGradient></defs>
-          <rect x="0" y="0" width="400" height="160" fill="url(#gHz)"/>
+        <!-- himmel vid horisonten + snö: sträcks över hela bredden; granar och torn skalas utan att beskäras -->
+        <div class="pv-sky"></div>
+        <svg class="pv-trees" viewBox="0 0 140 160" style="aspect-ratio:140/160">
           <path d="M0 150 L20 112 L32 132 L48 96 L64 130 L80 108 L96 140 L110 120 L128 150Z" fill="#0f2a2a"/>
-          <path d="M250 150 L270 118 L284 136 L300 104 L318 134 L332 116 L350 150Z" fill="#0f2a2a"/>
-          <rect x="0" y="146" width="400" height="14" fill="#dfe8ff"/>
-          <g stroke="#e63946" stroke-width="7"><path d="M372 0 V160 M396 0 V160"/></g>
-          <g stroke="#ffd166" stroke-width="3"><path d="M372 10 L396 40 M372 40 L396 70 M372 70 L396 100 M372 100 L396 130 M372 130 L396 160"/></g>
         </svg>
+        <div style="flex:1"></div>
+        <svg class="pv-trees" viewBox="240 0 120 160" style="aspect-ratio:120/160">
+          <path d="M250 150 L270 118 L284 136 L300 104 L318 134 L332 116 L350 150Z" fill="#0f2a2a"/>
+        </svg>
+        <svg class="pv-tower" viewBox="0 0 40 160" style="aspect-ratio:40/160">
+          <g stroke="#e63946" stroke-width="7"><path d="M10 0 V160 M34 0 V160"/></g>
+          <g stroke="#ffd166" stroke-width="3"><path d="M10 10 L34 40 M10 40 L34 70 M10 70 L34 100 M10 100 L34 130 M10 130 L34 160"/></g>
+        </svg>
+        <div class="pv-snow"></div>
       </div>
       <svg class="planet" id="destPlanet" viewBox="0 0 240 240"><use id="destUse" href="#pl-mars"/></svg>
       <svg class="planet" id="tomtePlanet" viewBox="0 0 240 240"><use href="#pl-tomte"/></svg>
@@ -460,9 +480,13 @@ input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,209,102,.18)}
         <div class="glow"></div>
         <div class="aurora"></div>
         <div class="land">
-          <svg viewBox="0 0 800 300" preserveAspectRatio="xMidYMax slice">
+          <!-- snön sträcks ut över hela bredden -->
+          <svg viewBox="0 0 800 300" preserveAspectRatio="none" style="position:absolute;inset:0">
             <path d="M0 120 Q200 70 400 100 T800 90 V300 H0Z" fill="#c9d4f2"/>
             <path d="M0 160 Q260 110 520 150 T800 140 V300 H0Z" fill="#f2f6ff"/>
+          </svg>
+          <!-- husen och träden skalas utan att beskäras -->
+          <svg viewBox="0 0 800 300" preserveAspectRatio="xMidYMax meet" style="position:absolute;inset:0">
             <!-- pepparkakshus -->
             <g transform="translate(120 150)">
               <rect x="-50" y="-50" width="100" height="70" fill="#b5703a"/>
